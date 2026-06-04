@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cann-Paint | Barrie ON | Street-Style Painting</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --graffiti-pink: #FF1493;
+            --graffiti-cyan: #00FFFF;
+            --graffiti-lime: #39FF14;
+            --graffiti-yellow: #FFD700;
+            --graffiti-orange: #FF6B00;
+            --graffiti-purple: #8B00FF;
+            --dark-bg: #0a0a0a;
+            --dark-card: #1a1a1a;
+            --text: #f0f0f0;
+            --text-muted: #aaaaaa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ===== SPRAY SPLATTER OVERLAY ===== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background:
+                radial-gradient(circle at 10% 20%, var(--graffiti-pink) 1px, transparent 1px),
+                radial-gradient(circle at 85% 15%, var(--graffiti-cyan) 2px, transparent 2px),
+                radial-gradient(circle at 30% 70%, var(--graffiti-lime) 1.5px, transparent 1.5px),
+                radial-gradient(circle at 70% 80%, var(--graffiti-orange) 1px, transparent 1px),
+                radial-gradient(circle at 50% 10%, var(--graffiti-purple) 2px, transparent 2px),
+                radial-gradient(circle at 15% 90%, var(--graffiti-yellow) 1px, transparent 1px);
+            background-size: 200px 200px, 300px 300px, 250px 250px, 280px 280px, 320px 320px, 220px 220px;
+            background-position: 0 0, 40px 60px, 130px 270px, 70px 400px, 200px 30px, 300px 250px;
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(10,10,10,0.95);
+            border-bottom: 3px solid var(--graffiti-pink);
+            box-shadow: 0 0 30px rgba(255,20,147,0.3);
+        }
+        nav .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+        }
+        nav .logo {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 2rem;
+            color: var(--graffiti-cyan);
+            text-shadow: 3px 3px 0 var(--graffiti-pink), 6px 6px 0 rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+            text-decoration: none;
+            transform: rotate(-2deg);
+            transition: transform 0.3s;
+        }
+        nav .logo:hover { transform: rotate(2deg) scale(1.05); }
+        nav .nav-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        nav .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 800;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+        }
+        nav .nav-links a:hover {
+            color: var(--graffiti-yellow);
+            border-color: var(--graffiti-lime);
+            box-shadow: 0 017_8px var(--graffiti-lime);
+            background: rgba(57,255,20,0.1);
+        }
+        .hamburger {
+            display: none;
+            font-size: 1.8rem;
+            color: var(--graffiti-cyan);
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* ===== HERO SECTION ===== */
+        #hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            padding: 100px 20px 60px;
+        }
+        #hero .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(10,10,10,0.85) 0%, rgba(139,0,255,0.3) 50%, rgba(255,20,147,0.25) 100%),
+                        url('https://images.unsplash.com/photo-1552250575-e508473b090f?w=1600&q=80') center/cover no-repeat;
+            z-index: 0;
+        }
+        #hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 80px;
+            background: linear-gradient(to top, var(--dark-bg), transparent);
+            z-index: 1;
+        }
+        #hero .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+        #hero .tag {
+            display: inline-block;
+            background: var(--graffiti-orange);
+            color: #000;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 4px;
+            padding: 6px 20px;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            border: 2px solid #000;
+            box-shadow: 4px 4px 0 #000;
+        }
+        #hero h1 {
+            font-family: 'Permanent Marker', cursive;
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            color: var(--graffiti-cyan);
+            text-shadow:
+                3px 3px 0 var(--graffiti-pink),
+                6px 6px 0 rgba(0,0,0,0.7),
+                0 0 60px rgba(0,255,255,0.5);
+            line-height: 1.1;
+            margin-bottom: 20px;
+            transform: rotate(-1deg);
+        }
+        #hero h1 span {
+            display: block;
+            font-size: 0.5em;
+            color: var(--graffiti-yellow);
+            text-shadow: 2px 2px 0 var(--graffiti-orange), 4px 4px 0 rgba(0,0,0,0.7);
+        }
+        #hero .location {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 6px;
+            color: var(--graffiti-lime);
+            text-shadow: 0 0 20px var(--graffiti-lime);
+            margin-bottom: 16px;
+        }
+        #hero .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #hero .cta-btn {
+            display: inline-block;
+            background: var(--graffiti-pink);
+            color: #fff;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 14px 40px;
+            border-radius: 3px;
+            border: 3px solid #000;
+            box-shadow: 6px 6px 0 #000, 0 0 30px rgba(255,20,147,0.5);
+            transition: all 0.2s;
+        }
+        #hero .cta-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0 #000, 0 0 50px rgba(255,20,147,0.8);
+            background: var(--graffiti-cyan);
+            color: #000;
+        }
+        #hero .cta-btn i { margin-left: 8px; }
+
+        /* ===== SECTION COMMONS ===== */
+        section {
+            padding: 80px 20px;
+            position: relative;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .section-header h2 {
+            font-family: 'Permanent Marker', cursive;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--graffiti-yellow);
+            text-shadow: 3px 3px 0 var(--graffiti-orange), 0 0 30px rgba(255,215,0,0.3);
+            display: inline-block;
+            transform: rotate(-1deg);
+            position: relative;
+        }
+        .section-header h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--graffiti-lime);
+            margin: 10px auto 0;
+            box-shadow: 0 0 15px var(--graffiti-lime);
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* ===== SERVICES SECTION ===== */
+        #services {
+            background:
+                radial-gradient(ellipse at 30% 20%, rgba(139,0,255,0.1) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(0,255,255,0.08) 0%, transparent 60%);
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 28px;
+        }
+        .service-card {
+            background: var(--dark-card);
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--graffiti-pink), var(--graffiti-cyan), var(--graffiti-lime));
+        }
+        .service-card:hover {
+            border-color: var(--graffiti-cyan);
+            box-shadow: 0 0 30px rgba(0,255,255,0.2);
+            transform: translateY(-4px);
+        }
+        .service-card .icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            display: block;
+            background: linear-gradient(135deg, var(--graffiti-pink), var(--graffiti-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .service-card h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            color: var(--graffiti-yellow);
+            margin-bottom: 10px;
+        }
+        .service-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        #about {
+            background:
+                linear-gradient(180deg, rgba(10,10,10,0.95) 0%, rgba(255,20,147,0.1) 50%, rgba(10,10,10,0.95) 100%),
+                url('https://images.unsplash.com/photo-1583225238311-0278ade1070d?w=1600&q=80') center/cover no-repeat fixed;
+            position: relative;
+        }
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        .about-text h3 {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 2rem;
+            color: var(--graffiti-cyan);
+            text-shadow: 2px 2px 0 var(--graffiti-pink);
+            margin-bottom: 16px;
+        }
+        .about-text p {
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            font-size: 1.05rem;
+        }
+        .about-text .highlight {
+            color: var(--graffiti-lime);
+            font-weight: 600;
+        }
+        .about-image {
+            border: 4px solid var(--graffiti-pink);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(255,20,147,0.3);
+            transform: rotate(2deg);
+        }
+        .about-image img {
+            width: 100%;
+            display: block;
+        }
+        .stats-row {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .stat {
+            text-align: center;
+            flex: 1;
+            min-width: 100px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 16px 12px;
+        }
+        .stat .number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--graffiti-orange);
+            text-shadow: 0 0 15px var(--graffiti-orange);
+            display: block;
+        }
+        .stat .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        #contact {
+            background:
+                radial-gradient(ellipse at 50% 10%, rgba(255,107,0,0.12) 0%, transparent 60%);
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        .contact-info h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 3px;
+            color: var(--graffiti-cyan);
+            margin-bottom: 20px;
+        }
+        .contact-info .info-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            font-size: 1.1rem;
+        }
+        .contact-info .info-item i {
+            font-size: 1.5rem;
+            color: var(--graffiti-lime);
+            width: 36px;
+            text-align: center;
+        }
+        .contact-info .info-item a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .contact-info .info-item a:hover {
+            color: var(--graffiti-yellow);
+        }
+        .contact-form {
+            background: var(--dark-card);
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 32px;
+        }
+        .contact-form h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 3px;
+            color: var(--graffiti-pink);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: #111;
+            border: 2px solid #444;
+            border-radius: 4px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--graffiti-cyan);
+            box-shadow: 0 0 10px rgba(0,255,255,0.2);
+        }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .submit-btn {
+            width: 100%;
+            background: var(--graffiti-lime);
+            color: #000;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border: 3px solid #000;
+            padding: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 #000;
+            transition: all 0.2s;
+        }
+        .submit-btn:hover {
+            background: var(--graffiti-cyan);
+            box-shadow: 6px 6px 0 #000;
+            transform: translate(-2px, -2px);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #050505;
+            border-top: 3px solid var(--graffiti-pink);
+            text-align: center;
+            padding: 24px 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        footer .footer-logo {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.5rem;
+            color: var(--graffiti-cyan);
+            text-shadow: 2px 2px 0 var(--graffiti-pink);
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            nav .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(10,10,10,0.98);
+                flex-direction: column;
+                padding: 16px 24px;
+                border-bottom: 3px solid var(--graffiti-pink);
+            }
+            nav .nav-links.active { display: flex; }
+            .hamburger { display: block; }
+
+            .about-content { grid-template-columns: 1fr; }
+            .about-image { order: -1; max-width: 400px; margin: 0 auto; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .stats-row { justify-content: center; }
+            #hero h1 { font-size: clamp(2rem, 10vw, 3.5rem); }
+            .services-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            nav .logo { font-size: 1.5rem; }
+            #hero .cta-btn { font-size: 1.2rem; padding: 12px 28px; }
+            .section-header h2 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav>
+    <div class="nav-inner">
+        <a href="#hero" class="logo">CANN-PAINT</a>
+        <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('active')" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <ul class="nav-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <div class="tag">705-795-4587</div>
+        <h1>Cann-Paint<span>Painting Co.</span></h1>
+        <div class="location">📍 Barrie, Ontario</div>
+        <p class="subtitle">
+            Bold colors. Clean lines. Urban edge. We bring the street-art aesthetic to homes and businesses across Barrie.
+        </p>
+        <a href="#contact" class="cta-btn">Get a Free Quote <i class="fa-solid fa-spray-can"></i></a>
+    </div>
+</section>
+
+<!-- ===== SERVICES ===== -->
+<section id="services">
+    <div class="container">
+        <div class="section-header">
+            <h2>Our Services</h2>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <span class="icon"><i class="fa-solid fa-house"></i></span>
+                <h3>Exterior Painting</h3>
+                <p>Full exterior repaints with durable, weather-resistant finishes. We prep, prime, and spray for a flawless result.</p>
+            </div>
+            <div class="service-card">
+                <span class="icon"><i class="fa-solid fa-paint-roller"></i></span>
+                <h3>Interior Painting</h3>
+                <p>From accent walls to whole-home transformations. Clean lines, bold colors, and a spray-paint precision finish.</p>
+            </div>
+            <div class="service-card">
+                <span class="icon"><i class="fa-solid fa-palette"></i></span>
+                <h3>Mural &amp; Street Art</h3>
+                <p>Custom graffiti murals for businesses, feature walls, and public spaces. We design and execute head-turning artwork.</p>
+            </div>
+            <div class="service-card">
+                <span class="icon"><i class="fa-solid fa-building"></i></span>
+                <h3>Commercial Painting</h3>
+                <p>Office buildings, storefronts, warehouses — we handle large-scale commercial projects on time and on budget.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section id="about">
+    <div class="container">
+        <div class="section-header">
+            <h2>About Cann-Paint</h2>
+        </div>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Barrie's Boldest Paint Crew</h3>
+                <p>
+                    At <span class="highlight">Cann-Paint</span>, we don't just paint walls — we make statements. Founded in Barrie, Ontario, our crew brings <span class="highlight">street-art energy</span> to every project, whether it's a residential repaint or a full-scale commercial mural.
+                </p>
+                <p>
+                    We combine old-school craftsmanship with a fresh, <span class="highlight">urban aesthetic</span>. Our spray-paint roots mean we understand coverage, color blending, and edge definition better than anyone.
+                </p>
+                <p>
+                    <strong>Licensed. Insured. Relentless about quality.</strong>
+                </p>
+                <div class="stats-row">
+                    <div class="stat">
+                        <span class="number">10+</span>
+                        <span class="label">Years Exp.</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">500+</span>
+                        <span class="label">Projects</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">100%</span>
+                        <span class="label">Satisfaction</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1611063158871-7dd3ed4a2ac8?w=600&q=80" alt="Street art mural painting" loading="lazy">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact">
+    <div class="container">
+        <div class="section-header">
+            <h2>Hit Us Up</h2>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-info">
+                <h3>Get In Touch</h3>
+                <div class="info-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <a href="tel:705-795-4587">705-795-4587</a>
+                </div>
+                <div class="info-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <a href="mailto:info@cannpaint.ca">info@cannpaint.ca</a>
+                </div>
+                <div class="info-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Barrie, Ontario</span>
+                </div>
+                <div class="info-item">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>Mon–Fri: 7am–6pm<br>Sat: 8am–4pm</span>
+                </div>
+                <div class="info-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Free Estimates · Licensed &amp; Insured</span>
+                </div>
+            </div>
+            <div class="contact-form">
+                <h4>Request a Quote</h4>
+                <form onsubmit="alert('Thanks! We will get back to you within 24 hours.'); return false;">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" placeholder="Your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="you@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" placeholder="(705) 555-0000">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Project Details</label>
+                        <textarea id="message" placeholder="Tell us about your project — what needs painting?" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fa-solid fa-spray-can-sparkles"></i> Send It!
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    <div class="footer-logo">CANN-PAINT</div>
+    <p>&copy; 2026 Cann-Paint · Barrie, Ontario · 705-795-4587</p>
+    <p style="margin-top:4px;font-size:0.8rem;">Photos via <a href="https://unsplash.com" style="color:var(--graffiti-cyan);">Unsplash</a></p>
+</footer>
+
+</body>
+</html>
